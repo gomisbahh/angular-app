@@ -1,0 +1,99 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+  <!-- Main Content Container -->
+  <div class="w-full max-w-lg bg-white shadow-2xl rounded-xl p-8 transition-all duration-300">
+
+    <!-- --- Main Page (Dashboard) View --- -->
+    @if (isAuthenticated()) {
+      <div class="text-center">
+        <h1 class="text-4xl font-extrabold text-blue-600 mb-4">Welcome, {{ user().name }}!</h1>
+        <p class="text-xl text-gray-700 mb-8">
+          You are successfully authenticated as <span class="font-mono bg-blue-100 p-1 rounded">{{ user().username }}</span>.
+        </p>
+
+        <div class="p-6 bg-blue-50 border-l-4 border-blue-400 rounded-lg text-left">
+          <h2 class="text-2xl font-semibold text-blue-800 mb-3">Application Dashboard</h2>
+          <p class="text-gray-600">
+            This is your main application page. Content here is only visible to logged-in users.
+            This Angular component is communicating with the Node.js Express server to handle authentication state.
+          </p>
+        </div>
+
+        <div class="mt-8">
+          @if(imageUrl()){
+            <img [src]="imageUrl()" alt="Offer Image" class="w-full h-auto rounded-lg shadow-md">
+          } @else {
+            <div class="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center animate-pulse">
+              <span class="text-gray-500">Loading image...</span>
+            </div>
+          }
+        </div>
+
+        <button
+          (click)="handleLogout()"
+          class="mt-10 w-full md:w-auto px-6 py-3 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-150 ease-in-out transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-red-500 focus:ring-opacity-50"
+        >
+          Logout
+        </button>
+      </div>
+    }
+    <!-- --- Login Page View --- -->
+    @if (!isAuthenticated()) {
+      <div class="text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6">User Login</h1>
+        <p class="text-gray-500 mb-8">Connects to Node.js backend on port 3000.</p>
+
+        <!-- Error Message Box -->
+        @if (errorMessage()) {
+          <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-md" role="alert">
+            <p class="font-bold">Error</p>
+            <p>{{ errorMessage() }}</p>
+          </div>
+        }
+
+        <form (submit)="handleLogin($event)" class="space-y-6">
+          <!-- Username Field -->
+          <div>
+            <label for="username" class="block text-left text-sm font-medium text-gray-700 mb-1">Username</label>
+            <input
+              id="username"
+              type="text"
+              [value]="username()"
+              (input)="onUsernameInput($event)"
+              required
+              class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+              placeholder="e.g., user1 or admin"
+            >
+          </div>
+
+          <!-- Password Field -->
+          <div>
+            <label for="password" class="block text-left text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input
+              id="password"
+              type="password"
+              [value]="password()"
+              (input)="onPasswordInput($event)"
+              required
+              class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+              placeholder="e.g., password123 or adminpassword"
+            >
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            [disabled]="isLoading()"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out transform hover:scale-[1.01] disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            @if (isLoading()) {
+              <span class="animate-spin h-5 w-5 mr-3 border-b-2 border-white rounded-full"></span>
+              Logging In...
+            } @else {
+              Sign In
+            }
+          </button>
+        </form>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,4 @@
+/* Set Inter font */
+:host {
+  font-family: 'Inter', sans-serif;
+}
